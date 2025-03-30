@@ -20,9 +20,7 @@ proxyPort = int(args.port)
 try:
   # Create a server socket
   serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a TCP socket
-  #serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Re-use the socket
-  #serverSocket.bind((proxyHost, proxyPort))  # bind the socket to a public host, and a port
-  #serverSocket.listen(10)  # become a server socket
+  serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Re-use the socket
   print ('Created socket')
 except:
   print ('Failed to create socket')
