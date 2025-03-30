@@ -106,7 +106,7 @@ while True:
 
     print ('Cache hit! Loading from cache file: ' + cacheLocation)
     for item in cacheData:
-    clientSocket.send(item.encode())
+      clientSocket.send(item.encode())
     cacheFile.close()
     print ('Sent to the client:')
     print ('> ' + cacheData)
