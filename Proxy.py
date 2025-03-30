@@ -105,10 +105,8 @@ while True:
     cacheData = cacheFile.readlines()
 
     print ('Cache hit! Loading from cache file: ' + cacheLocation)
-    # ProxyServer finds a cache hit
-    # Send back response to client 
-    # ~~~~ INSERT CODE ~~~~
-    # ~~~~ END CODE INSERT ~~~~
+    for item in cacheData:
+    clientSocket.send(item.encode())
     cacheFile.close()
     print ('Sent to the client:')
     print ('> ' + cacheData)
@@ -117,16 +115,14 @@ while True:
     originServerSocket = None
     # Create a socket to connect to origin server
     # and store in originServerSocket
-    # ~~~~ INSERT CODE ~~~~
-    # ~~~~ END CODE INSERT ~~~~
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     print ('Connecting to:\t\t' + hostname + '\n')
     try:
       # Get the IP address for a hostname
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
-      # ~~~~ INSERT CODE ~~~~
-      # ~~~~ END CODE INSERT ~~~~
+      originServerSocket.connect((address, 80))
       print ('Connected to origin Server')
 
       originServerRequest = ''
