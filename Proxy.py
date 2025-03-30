@@ -19,7 +19,7 @@ proxyPort = int(args.port)
 # Create a server socket, bind it to a port and start listening
 try:
   # Create a server socket
-  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create a TCP socket
+  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a TCP socket
   serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Re-use the socket
   serverSocket.bind((proxyHost, proxyPort))  # bind the socket to a public host, and a port
   serverSocket.listen(10)  # become a server socket
@@ -118,10 +118,9 @@ while True:
     originServerSocket = None
     # Create a socket to connect to origin server
     # and store in originServerSocket
-    # ProxyServer could not find a cache hit
     originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     print ('Connecting to:\t\t' + hostname + '\n')
-    
     try:
       # Get the IP address for a hostname
       address = socket.gethostbyname(hostname)
