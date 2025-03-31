@@ -16,11 +16,13 @@ args = parser.parse_args()
 proxyHost = args.hostname
 proxyPort = int(args.port)
 
+serverSocket = None
+
 # Create a server socket, bind it to a port and start listening
 try:
   # Create a server socket
-  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a TCP socket
-  serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Re-use the socket
+  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  # serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Re-use the socket
   print ('Created socket')
 except:
   print ('Failed to create socket')
@@ -106,8 +108,10 @@ while True:
     cacheData = cacheFile.readlines()
 
     print ('Cache hit! Loading from cache file: ' + cacheLocation)
-    for item in cacheData:
-      clientSocket.send(item.encode())
+    # Send back response to client 
+    # ~~~~ INSERT CODE ~~~~
+    clientSocket.sendall(''.join(cacheData).encode())
+    # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
     print ('> ' + cacheData)
@@ -116,45 +120,19 @@ while True:
     originServerSocket = None
     # Create a socket to connect to origin server
     # and store in originServerSocket
+    # ~~~~ INSERT CODE ~~~~
     originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # ~~~~ END CODE INSERT ~~~~
+
     print ('Connecting to:\t\t' + hostname + '\n')
-    address = socket.gethostbyname(hostname)
-    originServerSocket.connect((address, 80))
-
-    #Construct request
-    originRequest = f"GET {resource} {version}\r\nHost: {hostname}\r\n\r\n"
-    originServerSocket.send(originRequest.encode())
-
-    # Make sure cache directory exists
-    cacheFolder = os.path.dirname(cacheLocation)
-    if not os.path.exists(cacheFolder):
-        os.makedirs(cacheFolder)
-
-    # Write response to cache and send to client
-    cacheFile = open(cacheLocation, "w")
-
-    while True:
-        response = originServerSocket.recv(BUFFER_SIZE)
-        if not response:
-            break
-
-        # decode to string for writing
-        responseText = response.decode(errors='ignore')
-
-        cacheFile.write(responseText)
-
-        # send original bytes to client
-        clientSocket.send(response)
-
-    cacheFile.close()
-    originServerSocket.close()
-
 
     try:
       # Get the IP address for a hostname
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
+      # ~~~~ INSERT CODE ~~~~
       originServerSocket.connect((address, 80))
+      # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
       originServerRequest = ''
