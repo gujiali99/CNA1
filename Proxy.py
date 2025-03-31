@@ -117,8 +117,38 @@ while True:
     # Create a socket to connect to origin server
     # and store in originServerSocket
     originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     print ('Connecting to:\t\t' + hostname + '\n')
+    address = socket.gethostbyname(hostname)
+    originServerSocket.connect((address, 80))
+
+    #Construct request
+    originRequest = f"GET {resource} {version}\r\nHost: {hostname}\r\n\r\n"
+    originServerSocket.send(originRequest.encode())
+
+    # Make sure cache directory exists
+    cacheFolder = os.path.dirname(cacheLocation)
+    if not os.path.exists(cacheFolder):
+        os.makedirs(cacheFolder)
+
+    # Write response to cache and send to client
+    cacheFile = open(cacheLocation, "w")
+
+    while True:
+        response = originServerSocket.recv(BUFFER_SIZE)
+        if not response:
+            break
+
+        # decode to string for writing
+        responseText = response.decode(errors='ignore')
+        cacheFile.write(responseText)
+
+        # send original bytes to client
+        clientSocket.send(response)
+
+    cacheFile.close()
+    originServerSocket.close()
+
+
     try:
       # Get the IP address for a hostname
       address = socket.gethostbyname(hostname)
